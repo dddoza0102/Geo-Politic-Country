@@ -1,0 +1,5 @@
+name: Geo-Politic-Country
+version: '1.0.0.0'
+main: dev.doza.politic.Plugin
+api-version: '1.21'
+authors: [ dddoza0102 ]
