@@ -1,0 +1,32 @@
+1:
+  name: "White banner"
+  material: WHITE_BANNER
+  amount: 1
+2:
+  name: "Iron ingot"
+  material: IRON_INGOT
+  amount: 16
+3:
+  name: "White bed"
+  material: WHITE_BED
+  amount: 1
+4:
+  name: "Book"
+  material: BOOK
+  amount: 4
+5:
+  name: "Campfire"
+  material: CAMPFIRE
+  amount: 1
+6:
+  name: "Bell"
+  material: BELL
+  amount: 1
+7:
+  name: "Spruce log"
+  material: SPRUCE_LOG
+  amount: 32
+8:
+  name: "Spruce fence"
+  material: SPRUCE_FENCE
+  amount: 16

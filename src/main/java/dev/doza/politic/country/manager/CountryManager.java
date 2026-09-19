@@ -2,6 +2,7 @@ package dev.doza.politic.country.manager;
 
 import dev.doza.politic.chat.util.ChatUtil;
 import dev.doza.politic.country.Country;
+import dev.doza.politic.items.Items;
 import dev.doza.politic.town.Town;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -17,6 +18,11 @@ public class CountryManager {
         Player player = Bukkit.getPlayer(resident);
         if(!(player.hasPermission("geo.country.create"))){
             ChatUtil.send(player, "not_enough_permission");
+            return;
+        }
+
+        if(Items.isPlayerHas(player, "need_to_create_country")){
+            ChatUtil.send(player,"");
             return;
         }
 
