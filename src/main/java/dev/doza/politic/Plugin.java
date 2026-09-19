@@ -1,10 +1,15 @@
 package dev.doza.politic;
 
+import dev.doza.politic.webhook.config.WebhookConfig;
+import dev.doza.politic.webhook.manager.WebhookManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class Plugin extends JavaPlugin {
     
     private static Plugin instance;
+
+    private WebhookConfig webhookConfig;
+    private WebhookManager webhookManager;
 
     public static Plugin getInstance() {
         return instance;
@@ -13,5 +18,9 @@ public final class Plugin extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
+    }
+
+    public WebhookManager getWebhookManager() {
+        return webhookManager;
     }
 }
