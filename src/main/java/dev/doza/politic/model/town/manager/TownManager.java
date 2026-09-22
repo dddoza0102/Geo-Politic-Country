@@ -1,6 +1,6 @@
-package dev.doza.politic.town.manager;
+package dev.doza.politic.model.town.manager;
 
-import dev.doza.politic.town.Town;
+import dev.doza.politic.model.town.Town;
 
 import java.util.Map;
 

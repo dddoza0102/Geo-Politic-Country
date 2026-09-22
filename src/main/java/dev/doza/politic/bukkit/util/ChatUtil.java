@@ -1,7 +1,7 @@
-package dev.doza.politic.chat.util;
+package dev.doza.politic.bukkit.util;
 
 import dev.doza.politic.Plugin;
-import dev.doza.politic.config.manager.ConfigManager;
+import dev.doza.politic.bukkit.manager.ConfigManager;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;

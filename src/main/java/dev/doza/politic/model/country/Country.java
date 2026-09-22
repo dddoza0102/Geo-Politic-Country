@@ -1,7 +1,7 @@
-package dev.doza.politic.country;
+package dev.doza.politic.model.country;
 
-import dev.doza.politic.country.manager.CountryManager;
-import dev.doza.politic.town.Town;
+import dev.doza.politic.model.country.manager.CountryManager;
+import dev.doza.politic.model.town.Town;
 
 import java.awt.*;
 import java.util.List;

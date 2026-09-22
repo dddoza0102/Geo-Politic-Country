@@ -1,9 +1,9 @@
-package dev.doza.politic.country.manager;
+package dev.doza.politic.model.country.manager;
 
-import dev.doza.politic.chat.util.ChatUtil;
-import dev.doza.politic.country.Country;
-import dev.doza.politic.items.Items;
-import dev.doza.politic.town.Town;
+import dev.doza.politic.bukkit.util.ChatUtil;
+import dev.doza.politic.model.country.Country;
+import dev.doza.politic.bukkit.items.Items;
+import dev.doza.politic.model.town.Town;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 

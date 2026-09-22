@@ -1,6 +1,6 @@
-package dev.doza.politic.webhook.manager;
+package dev.doza.politic.bukkit.webhook.manager;
 
-import dev.doza.politic.webhook.config.WebhookConfig;
+import dev.doza.politic.bukkit.webhook.config.WebhookConfig;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;

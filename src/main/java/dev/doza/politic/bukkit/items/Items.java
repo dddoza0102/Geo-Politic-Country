@@ -1,10 +1,10 @@
-package dev.doza.politic.items;
+package dev.doza.politic.bukkit.items;
 
 import dev.doza.politic.Plugin;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import dev.doza.politic.config.manager.ConfigManager;
+import dev.doza.politic.bukkit.manager.ConfigManager;
 
 public class Items {
     public static boolean isPlayerHas(Player player, String path){

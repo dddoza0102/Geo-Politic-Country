@@ -1,4 +1,4 @@
-package dev.doza.politic.config.manager;
+package dev.doza.politic.bukkit.manager;
 
 import dev.doza.politic.Plugin;
 import org.bukkit.configuration.file.FileConfiguration;

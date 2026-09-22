@@ -1,7 +1,7 @@
 package dev.doza.politic;
 
-import dev.doza.politic.webhook.config.WebhookConfig;
-import dev.doza.politic.webhook.manager.WebhookManager;
+import dev.doza.politic.bukkit.webhook.config.WebhookConfig;
+import dev.doza.politic.bukkit.webhook.manager.WebhookManager;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.plugin.java.JavaPlugin;
 

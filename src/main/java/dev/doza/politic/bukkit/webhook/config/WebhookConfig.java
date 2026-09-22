@@ -1,4 +1,4 @@
-package dev.doza.politic.webhook.config;
+package dev.doza.politic.bukkit.webhook.config;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;

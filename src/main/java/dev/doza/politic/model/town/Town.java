@@ -1,6 +1,6 @@
-package dev.doza.politic.town;
+package dev.doza.politic.model.town;
 
-import dev.doza.politic.town.manager.TownManager;
+import dev.doza.politic.model.town.manager.TownManager;
 
 import java.util.List;
 import java.util.UUID;
