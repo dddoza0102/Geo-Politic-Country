@@ -6,6 +6,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import dev.doza.politic.bukkit.manager.ConfigManager;
 
+import java.util.Map;
+
+import static dev.doza.politic.bukkit.util.ChatUtil.*;
+
 public class Items {
     public static boolean isPlayerHas(Player player, String path){
         if(!ConfigManager.getConfig("config").getBoolean(path+".items.enable")&&
@@ -15,6 +19,13 @@ public class Items {
 
         if(ConfigManager.getConfig("config").getBoolean(path+".economy.enable")){
             if(!Plugin.getInstance().economy.has(player, ConfigManager.getConfig("config").getDouble("path.economy.sum"))){
+                send(player, ConfigManager.getConfig(
+                        Plugin.getInstance().getConfig().getString("lang_file")).getStringList("not_enough_resources_for_create_country").getFirst()
+                );
+                send(player, ConfigManager.getConfig(
+                        Plugin.getInstance().getConfig().getString("lang_file")).getStringList("not_enough_resources_for_create_country").get(1),
+                        Map.of("sum",ConfigManager.getConfig("config").getDouble("path.economy.sum")+"")
+                        );
                 return false;
             }
         }

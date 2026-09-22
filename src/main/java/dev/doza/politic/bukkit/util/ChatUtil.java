@@ -127,6 +127,7 @@ public class ChatUtil {
         return getConfigString(configPath, Collections.emptyMap());
     }
 
+
     public static String getConfigString(String configPath, Map<String, String> args) {
         String lang = Plugin.getInstance().getConfig().getString("lang");
         String message = ConfigManager.getConfig(lang).getString(configPath);
