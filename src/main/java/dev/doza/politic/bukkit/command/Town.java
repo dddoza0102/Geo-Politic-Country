@@ -18,9 +18,6 @@ public class Town implements BasicCommand {
             send();
             return;
         }
-        if(){
-            
-        }
     }
 
     @Override

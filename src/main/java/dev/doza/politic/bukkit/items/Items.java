@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import dev.doza.politic.bukkit.manager.ConfigManager;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import static dev.doza.politic.bukkit.util.ChatUtil.*;
@@ -24,11 +25,13 @@ public class Items {
                 );
                 send(player, ConfigManager.getConfig(
                         Plugin.getInstance().getConfig().getString("lang_file")).getStringList("not_enough_resources_for_create_country").get(1),
-                        Map.of("sum",ConfigManager.getConfig("config").getDouble("path.economy.sum")+"")
+                        Map.of("{sum}",ConfigManager.getConfig("config").getDouble("path.economy.sum")+"")
                         );
                 return false;
             }
         }
+
+        Map<String, Integer> falseItems= new HashMap<>();
 
         if (ConfigManager.getConfig("config").getBoolean("need_to_create_country.items")) {
             String itemsConfig = ConfigManager.getConfig("config").getString(path+".items.item_config");
@@ -51,8 +54,20 @@ public class Items {
                 }
 
                 if (totalCount < requiredAmount) {
-                    return false;
+                    falseItems.put(ConfigManager.getConfig(itemsConfig).getString(key+".name"),requiredAmount-totalCount);
                 }
+            }
+            if(!falseItems.isEmpty()){
+                send(player, ConfigManager.getConfig(
+                        Plugin.getInstance().getConfig().getString("lang_file")).getStringList("not_enough_resources_for_create_country").getFirst()
+                );
+                for (Map.Entry<String, Integer> entry : falseItems.entrySet()) {
+                    send(player, ConfigManager.getConfig(
+                                    Plugin.getInstance().getConfig().getString("lang_file")).getStringList("not_enough_resources_for_create_country").get(2),
+                            Map.of("{item}", entry.getKey(),"{amount}",entry.getValue()+"")
+                    );
+                }
+                return false;
             }
         }
 
