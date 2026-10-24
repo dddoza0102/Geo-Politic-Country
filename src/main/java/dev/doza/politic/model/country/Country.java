@@ -1,8 +1,12 @@
 package dev.doza.politic.model.country;
 
 import dev.doza.politic.model.country.manager.CountryManager;
+import dev.doza.politic.model.region.Region;
+import dev.doza.politic.model.region.flag.manager.FlagManager;
 import dev.doza.politic.model.region.flag.type.FlagType;
 import dev.doza.politic.model.town.Town;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
 
 import java.awt.*;
 import java.util.List;
@@ -20,6 +24,8 @@ public class Country {
     private boolean friendlyFire;
     private Map<FlagType, Boolean> Memberflags;
     private Map<FlagType, Boolean> NonMemberFlags;
+    private boolean pvp;
+    private Location center;
 
     public Country(String name, UUID resident, Town capital, int r, int g, int b) {
         this.name = name;
@@ -30,6 +36,11 @@ public class Country {
         this.capital = capital;
         this.color = new Color(r,g,b);
         this.friendlyFire = false;
+        this.Memberflags = FlagManager.getCountryFlags("member");
+        this.NonMemberFlags = FlagManager.getCountryFlags("non-member");
+        this.pvp = true;
+        this.center = Bukkit.getPlayer(resident).getLocation();
+        new Region(Bukkit.getPlayer(resident).getChunk(), this, capital);
         CountryManager.countries.put(name, this);
     }
 
@@ -95,5 +106,41 @@ public class Country {
     }
     public void setFriendlyFire(boolean friendlyFire){
         this.friendlyFire = friendlyFire;
+    }
+
+    public boolean isFriendlyFire() {
+        return friendlyFire;
+    }
+
+    public boolean isPvp() {
+        return pvp;
+    }
+
+    public void setPvp(boolean pvp) {
+        this.pvp = pvp;
+    }
+
+    public Map<FlagType, Boolean> getNonMemberFlags() {
+        return NonMemberFlags;
+    }
+
+    public void setNonMemberFlags(Map<FlagType, Boolean> nonMemberFlags) {
+        NonMemberFlags = nonMemberFlags;
+    }
+
+    public Map<FlagType, Boolean> getMemberflags() {
+        return Memberflags;
+    }
+
+    public void setMemberflags(Map<FlagType, Boolean> memberflags) {
+        Memberflags = memberflags;
+    }
+
+    public Location getCenter() {
+        return center;
+    }
+
+    public void setCenter(Location center) {
+        this.center = center;
     }
 }
