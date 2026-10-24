@@ -1,6 +1,7 @@
 package dev.doza.politic.model.country;
 
 import dev.doza.politic.model.country.manager.CountryManager;
+import dev.doza.politic.model.region.flag.type.FlagType;
 import dev.doza.politic.model.town.Town;
 
 import java.awt.*;
@@ -16,6 +17,9 @@ public class Country {
     private List<UUID> players;
     private Town capital;
     private Color color;
+    private boolean friendlyFire;
+    private Map<FlagType, Boolean> Memberflags;
+    private Map<FlagType, Boolean> NonMemberFlags;
 
     public Country(String name, UUID resident, Town capital, int r, int g, int b) {
         this.name = name;
@@ -25,6 +29,7 @@ public class Country {
         this.players = List.of(resident);
         this.capital = capital;
         this.color = new Color(r,g,b);
+        this.friendlyFire = false;
         CountryManager.countries.put(name, this);
     }
 
@@ -83,5 +88,12 @@ public class Country {
 
     public void setColor(Color color) {
         this.color = color;
+    }
+
+    public boolean getFriendlyFire(){
+        return friendlyFire;
+    }
+    public void setFriendlyFire(boolean friendlyFire){
+        this.friendlyFire = friendlyFire;
     }
 }

@@ -11,6 +11,7 @@ public class Town {
     private double balance;
     private List<UUID> players;
     private boolean isCapital;
+    private boolean friendlyFire;
 
     public Town(String name, UUID mayor, boolean capital) {
         this.name = name;
@@ -18,6 +19,7 @@ public class Town {
         this.balance = 0;
         this.players = List.of(mayor);
         this.isCapital = capital;
+        this.friendlyFire = false;
         TownManager.towns.put(name, this);
     }
 
@@ -60,5 +62,12 @@ public class Town {
 
     public void setCapital(boolean capital) {
         isCapital = capital;
+    }
+
+    public boolean getFriendlyFire(){
+        return friendlyFire;
+    }
+    public void setFriendlyFire(boolean friendlyFire){
+        this.friendlyFire = friendlyFire;
     }
 }
