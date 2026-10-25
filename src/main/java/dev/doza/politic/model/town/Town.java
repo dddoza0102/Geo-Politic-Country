@@ -8,7 +8,9 @@ import dev.doza.politic.model.town.manager.TownManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public class Town {
@@ -23,6 +25,7 @@ public class Town {
     private List<Flag> CountryMemberFlags;
     private boolean pvp;
     private Location center;
+    private Map<UUID, List<Flag>> playersFlag;
 
     public Town(String name, UUID mayor, boolean capital) {
         this.name = name;
@@ -36,6 +39,7 @@ public class Town {
         this.NonMemberFlags = FlagManager.getTownFlags("country-member");
         this.pvp = true;
         this.center = Bukkit.getPlayer(mayor).getLocation();
+        this.playersFlag = new HashMap<>();
         new Region(Bukkit.getPlayer(mayor).getChunk(), CountryManager.getCountry(Bukkit.getPlayer(mayor)), this);
         TownManager.towns.put(name, this);
     }
@@ -130,5 +134,13 @@ public class Town {
 
     public void setCountryMemberFlags(List<Flag> countryMemberFlags) {
         CountryMemberFlags = countryMemberFlags;
+    }
+
+    public Map<UUID, List<Flag>> getPlayersFlag() {
+        return playersFlag;
+    }
+
+    public void setPlayersFlag(Map<UUID, List<Flag>> playersFlag) {
+        this.playersFlag = playersFlag;
     }
 }

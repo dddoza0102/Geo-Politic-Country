@@ -9,6 +9,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
 import java.awt.*;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -26,6 +27,7 @@ public class Country {
     private List<Flag> NonMemberFlags;
     private boolean pvp;
     private Location center;
+    private Map<UUID, List<Flag>> playersFlag;
 
     public Country(String name, UUID resident, Town capital, int r, int g, int b) {
         this.name = name;
@@ -40,6 +42,7 @@ public class Country {
         this.NonMemberFlags = FlagManager.getCountryFlags("non-member");
         this.pvp = true;
         this.center = Bukkit.getPlayer(resident).getLocation();
+        this.playersFlag = new HashMap<>();
         new Region(Bukkit.getPlayer(resident).getChunk(), this, capital);
         CountryManager.countries.put(name, this);
     }
@@ -142,5 +145,13 @@ public class Country {
 
     public void setCenter(Location center) {
         this.center = center;
+    }
+
+    public Map<UUID, List<Flag>> getPlayersFlag() {
+        return playersFlag;
+    }
+
+    public void setPlayersFlag(Map<UUID, List<Flag>> playersFlag) {
+        this.playersFlag = playersFlag;
     }
 }
