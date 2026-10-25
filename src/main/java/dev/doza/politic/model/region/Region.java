@@ -1,7 +1,7 @@
 package dev.doza.politic.model.region;
 
-import dev.doza.politic.bukkit.region.RegionManager;
 import dev.doza.politic.model.country.Country;
+import dev.doza.politic.model.region.manager.RegionManager;
 import dev.doza.politic.model.town.Town;
 import org.bukkit.Chunk;
 

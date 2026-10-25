@@ -2,8 +2,8 @@ package dev.doza.politic.model.country;
 
 import dev.doza.politic.model.country.manager.CountryManager;
 import dev.doza.politic.model.region.Region;
+import dev.doza.politic.model.region.flag.Flag;
 import dev.doza.politic.model.region.flag.manager.FlagManager;
-import dev.doza.politic.model.region.flag.type.FlagType;
 import dev.doza.politic.model.town.Town;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -22,8 +22,8 @@ public class Country {
     private Town capital;
     private Color color;
     private boolean friendlyFire;
-    private Map<FlagType, Boolean> Memberflags;
-    private Map<FlagType, Boolean> NonMemberFlags;
+    private List<Flag> MemberFlags;
+    private List<Flag> NonMemberFlags;
     private boolean pvp;
     private Location center;
 
@@ -36,7 +36,7 @@ public class Country {
         this.capital = capital;
         this.color = new Color(r,g,b);
         this.friendlyFire = false;
-        this.Memberflags = FlagManager.getCountryFlags("member");
+        this.MemberFlags = FlagManager.getCountryFlags("member");
         this.NonMemberFlags = FlagManager.getCountryFlags("non-member");
         this.pvp = true;
         this.center = Bukkit.getPlayer(resident).getLocation();
@@ -120,20 +120,20 @@ public class Country {
         this.pvp = pvp;
     }
 
-    public Map<FlagType, Boolean> getNonMemberFlags() {
+    public List<Flag> getNonMemberFlags() {
         return NonMemberFlags;
     }
 
-    public void setNonMemberFlags(Map<FlagType, Boolean> nonMemberFlags) {
+    public void setNonMemberFlags(List<Flag> nonMemberFlags) {
         NonMemberFlags = nonMemberFlags;
     }
 
-    public Map<FlagType, Boolean> getMemberflags() {
-        return Memberflags;
+    public List<Flag> getMemberFlags() {
+        return MemberFlags;
     }
 
-    public void setMemberflags(Map<FlagType, Boolean> memberflags) {
-        Memberflags = memberflags;
+    public void setMemberFlags(List<Flag> memberFlags) {
+        MemberFlags = memberFlags;
     }
 
     public Location getCenter() {
