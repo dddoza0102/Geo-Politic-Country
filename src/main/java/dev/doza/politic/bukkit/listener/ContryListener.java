@@ -9,7 +9,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
 public class ContryListener implements Listener {
-    @EventHandler
+    @EventHandler // Обработка удара по союзнику
     public void onHit(EntityDamageByEntityEvent e){
         if(CountryManager.getCountry((Player) e.getDamager())==null) return;
 
@@ -22,4 +22,11 @@ public class ContryListener implements Listener {
         ChatUtil.send("friendly-fire-disabled");
         e.setCancelled(true);
     }
+    @EventHandler //Обработка удара в регионе
+    public void onDamage(EntityDamageByEntityEvent e){
+        if(!(e.getDamager() instanceof Player) && !(e.getEntity() instanceof Player)) return;
+
+        if
+    }
+
 }
