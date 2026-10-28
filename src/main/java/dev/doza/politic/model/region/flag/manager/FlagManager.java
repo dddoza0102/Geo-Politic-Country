@@ -14,12 +14,28 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class FlagManager {
     static FileConfiguration townConfig = ConfigManager.getConfig("settings/town/flags");
     static FileConfiguration countryConfig = ConfigManager.getConfig("settings/town/flags");
 
-    public static Map<UUID, List<Location>> players = new HashMap<>();
+    // Хранилище данных о блоках игроков
+    public static final Map<UUID, PlayerBlockData> playerBlocks = new ConcurrentHashMap<>();
+
+    // Класс-контейнер для хранения двух списков локаций
+    public static class PlayerBlockData {
+        private final List<Location> breakableBlocks = new ArrayList<>();
+        private final List<Location> placeableBlocks = new ArrayList<>();
+
+        public List<Location> getBreakableBlocks() { return breakableBlocks; }
+        public List<Location> getPlaceableBlocks() { return placeableBlocks; }
+    }
+
+    // Удобный метод получения данных игрока с авто-созданием
+    public static PlayerBlockData getPlayerData(Player player) {
+        return playerBlocks.computeIfAbsent(player.getUniqueId(), k -> new PlayerBlockData());
+    }
 
     public static List<Flag> getTownFlags(String group){
         List<Flag> flags = new ArrayList<>();
@@ -73,6 +89,4 @@ public class FlagManager {
         }
         return false;
     }
-
-
 }

@@ -1,12 +1,11 @@
 package dev.doza.politic.bukkit.listener;
 
 import dev.doza.politic.bukkit.util.ChatUtil;
-import dev.doza.politic.model.country.Country;
 import dev.doza.politic.model.country.manager.CountryManager;
 import dev.doza.politic.model.region.flag.type.FlagType;
 import dev.doza.politic.model.region.manager.RegionManager;
-import dev.doza.politic.model.town.Town;
 import dev.doza.politic.model.town.manager.TownManager;
+import dev.doza.politic.model.region.flag.manager.FlagManager;
 import org.bukkit.Location;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
@@ -16,22 +15,26 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import static dev.doza.politic.model.region.flag.manager.FlagManager.hasPermission;
-import static dev.doza.politic.model.region.flag.manager.FlagManager.players;
+import static dev.doza.politic.model.region.flag.manager.FlagManager.getPlayerData;
 
 public class RegionListener {
+
     @EventHandler // Обработка удара по союзнику
     public void onHit(EntityDamageByEntityEvent e){
-        if(CountryManager.getCountry((Player) e.getDamager())==null||TownManager.getTown((Player) e.getDamager())==null) return;
+        if (!(e.getDamager() instanceof Player) || !(e.getEntity() instanceof Player)) return;
 
-        if(CountryManager.getCountry((Player) e.getEntity()) != CountryManager.getCountry((Player) e.getDamager()) || TownManager.getTown((Player) e.getEntity()) != TownManager.getTown((Player) e.getDamager())) return;
+        Player damager = (Player) e.getDamager();
+        Player victim = (Player) e.getEntity();
 
-        if (!CountryManager.getCountry((Player) e.getDamager()).getFriendlyFire()||!TownManager.getTown(((Player) e.getDamager())).getFriendlyFire()) return;
+        if(CountryManager.getCountry(damager) == null || TownManager.getTown(damager) == null) return;
+        if(CountryManager.getCountry(victim) != CountryManager.getCountry(damager) || TownManager.getTown(victim) != TownManager.getTown(damager)) return;
+        if (!CountryManager.getCountry(damager).getFriendlyFire() || !TownManager.getTown(damager).getFriendlyFire()) return;
 
         ChatUtil.send("friendly-fire-disabled");
         e.setCancelled(true);
     }
 
-    @EventHandler //Обработка удара в регионе
+    @EventHandler // Обработка удара в регионе
     public void onDamage(EntityDamageByEntityEvent e){
         if(!(e.getDamager() instanceof Player) && !(e.getEntity() instanceof Player)) return;
 
@@ -46,17 +49,19 @@ public class RegionListener {
         Player player = event.getPlayer();
         Location loc = event.getBlock().getLocation();
 
-        // Проверка для обычного ломания
+        // 1. Общая проверка региона на ломание блоков
         if (!hasPermission(player, loc, FlagType.BREAK)) {
             event.setCancelled(true);
             return;
         }
 
-        // Проверка для кастомного списка блоков
-        var playerBlocks = players.get(player);
-        if (playerBlocks != null && playerBlocks.contains(loc)) {
+        // 2. Проверка персонального списка блоков для ломания
+        var data = getPlayerData(player);
+        if (data.getBreakableBlocks().contains(loc)) {
             if (!hasPermission(player, loc, FlagType.BREAK_MY)) {
                 event.setCancelled(true);
+            } else {
+                data.getBreakableBlocks().remove(loc); // Успешно сломан, удаляем из памяти
             }
         }
     }
@@ -66,18 +71,26 @@ public class RegionListener {
         Player player = event.getPlayer();
         Location loc = event.getBlock().getLocation();
 
+        // 1. Общая проверка региона на установку блоков
         if (!hasPermission(player, loc, FlagType.PLACE)) {
             event.setCancelled(true);
             return;
         }
 
-        var playerBlocks = players.get(player);
-        if (playerBlocks != null && playerBlocks.contains(loc)) {
+        // 2. Проверка персонального списка разрешенных мест для установки
+        var data = getPlayerData(player);
+        if (data.getPlaceableBlocks().contains(loc)) {
             if (!hasPermission(player, loc, FlagType.PLACE_MY)) {
                 event.setCancelled(true);
-            }else {
-                playerBlocks.remove(loc)
+                return;
+            } else {
+                data.getPlaceableBlocks().remove(loc); // Место использовано
             }
+        }
+
+        // 3. Автоматически добавляем успешно установленный блок в список ломания этого игрока
+        if (!event.isCancelled()) {
+            data.getBreakableBlocks().add(loc);
         }
     }
 
@@ -93,14 +106,14 @@ public class RegionListener {
             return;
         }
 
-        var playerBlocks = players.get(player);
-        if (playerBlocks != null && playerBlocks.contains(loc)) {
+        var data = getPlayerData(player);
+        if (data.getBreakableBlocks().contains(loc)) {
             if (!hasPermission(player, loc, FlagType.USE_MY)) {
                 event.setCancelled(true);
             }
         }
-
     }
+
     @EventHandler
     public void onEntityDamage(EntityDamageByEntityEvent event) {
         if (!(event.getDamager() instanceof Player player)) return;
@@ -119,6 +132,4 @@ public class RegionListener {
             }
         }
     }
-
-
 }

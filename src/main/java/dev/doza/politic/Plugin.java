@@ -1,5 +1,6 @@
 package dev.doza.politic;
 
+import dev.doza.politic.bukkit.armor.FakeArmorManager;
 import dev.doza.politic.bukkit.webhook.config.WebhookConfig;
 import dev.doza.politic.bukkit.webhook.manager.WebhookManager;
 import net.milkbowl.vault.economy.Economy;
@@ -13,6 +14,8 @@ public final class Plugin extends JavaPlugin {
     private WebhookConfig webhookConfig;
     private WebhookManager webhookManager;
 
+    private FakeArmorManager armorManager;
+
     public static Plugin getInstance() {
         return instance;
     }
@@ -20,6 +23,7 @@ public final class Plugin extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
+        this.armorManager = new FakeArmorManager(this);
     }
 
     public WebhookManager getWebhookManager() {
