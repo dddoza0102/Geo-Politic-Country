@@ -5,6 +5,7 @@ import dev.doza.politic.bukkit.manager.ConfigManager;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.Collections;
 import java.util.List;
@@ -27,7 +28,7 @@ public class ChatUtil {
     }
 
     public static void send(CommandSender player, String path, Map<String, String> args) {
-        var config = ConfigManager.getConfig(Plugin.getInstance().getConfig().getString("lang_file"));
+        FileConfiguration config = getLangConfig();
         Object value = config.get(path);
 
         if (value == null) {
@@ -47,8 +48,12 @@ public class ChatUtil {
         }
     }
 
+    public static void send(CommandSender player, String path) {
+        send(player, path, Collections.emptyMap());
+    }
+
     public static void send(String path, Map<String, String> args) {
-        var config = ConfigManager.getConfig(Plugin.getInstance().getConfig().getString("lang_file"));
+        FileConfiguration config = getLangConfig();
         Object value = config.get(path);
 
         if (value == null) {
@@ -58,68 +63,27 @@ public class ChatUtil {
 
         if (value instanceof List) {
             for (String string : config.getStringList(path)) {
-                String readyMessage = applyArgs(format(string), args);
-
-                Plugin.getInstance().getWebhookManager().sendNotification(readyMessage);
+                Plugin.getInstance().getWebhookManager().sendNotification(applyArgs(format(string), args));
             }
         } else {
             String string = config.getString(path);
             if (string != null) {
-                String readyMessage = applyArgs(format(string), args);
-                Plugin.getInstance().getWebhookManager().sendNotification(readyMessage);
+                Plugin.getInstance().getWebhookManager().sendNotification(applyArgs(format(string), args));
             }
         }
     }
 
-
-    public static void send(CommandSender player, String path){
-        var config = ConfigManager.getConfig(Plugin.getInstance().getConfig().getString("lang_file"));
-        Object value = config.get(path);
-
-        if (value == null) {
-            player.sendMessage(path);
-            return;
-        }
-
-        if (value instanceof List) {
-            for (String string : config.getStringList(path)) {
-                player.sendMessage(format(string));
-            }
-        } else {
-            String string = config.getString(path);
-            if (string != null) {
-                player.sendMessage(format(string));
-            }
-        }
+    public static void send(String path) {
+        send(path, Collections.emptyMap());
     }
 
-    public static void send(String path){
-        var config = ConfigManager.getConfig(Plugin.getInstance().getConfig().getString("lang_file"));
-        Object value = config.get(path);
+    public static String applyArgs(String text, Map<String, String> args) {
+        String result = text;
 
-        if (value == null) {
-            Plugin.getInstance().getLogger().warning("Путь локализации '" + path + "' не найден для отправки в вебхуки!");
-            return;
+        for (Map.Entry<String, String> entry : args.entrySet()) {
+            result = result.replace(entry.getKey(), entry.getValue());
         }
 
-        if (value instanceof List) {
-            for (String string : config.getStringList(path)) {
-                Plugin.getInstance().getWebhookManager().sendNotification(format(string));
-            }
-        } else {
-            String string = config.getString(path);
-            if (string != null) {
-                Plugin.getInstance().getWebhookManager().sendNotification(format(string));
-            }
-        }
-    }
-
-    public static String applyArgs(String text, Map<String, String> args){
-        String result = null;
-        for (String arg: args.keySet()){
-            assert false;
-            result = result.replace(arg, args.get(arg));
-        }
         return result;
     }
 
@@ -127,10 +91,8 @@ public class ChatUtil {
         return getConfigString(configPath, Collections.emptyMap());
     }
 
-
     public static String getConfigString(String configPath, Map<String, String> args) {
-        String lang = Plugin.getInstance().getConfig().getString("lang");
-        String message = ConfigManager.getConfig(lang).getString(configPath);
+        String message = getLangConfig().getString(configPath);
 
         if (message == null) {
             if (configPath.toLowerCase().contains("not_country")) return "§cNot country";
@@ -138,10 +100,10 @@ public class ChatUtil {
             return "";
         }
 
-        for (Map.Entry<String, String> entry : args.entrySet()) {
-            message = message.replace(entry.getKey(), entry.getValue());
-        }
+        return format(applyArgs(message, args));
+    }
 
-        return format(message);
+    private static FileConfiguration getLangConfig() {
+        return ConfigManager.getConfig(Plugin.getInstance().getConfig().getString("lang_file"));
     }
 }

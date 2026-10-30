@@ -15,11 +15,18 @@ public class ConfigManager {
     private static final Map<String, FileConfiguration> configs = new HashMap<>();
     private static final Map<String, File> files = new HashMap<>();
 
+    // ИСПРАВЛЕНО (1): новый метод, приводит "config.yml" и "config" к одному ключу "config"
+    private static String normalize(String fileName) {
+        return fileName.endsWith(".yml") ? fileName.substring(0, fileName.length() - 4) : fileName;
+    }
+
     public static void init(String... fileNames) {
         Plugin plugin = Plugin.getInstance();
 
         for (String fileName : fileNames) {
-            String fullPath = fileName.endsWith(".yml") ? fileName : fileName + ".yml";
+            // ИСПРАВЛЕНО (1): ключ в мапах теперь всегда без ".yml"
+            String key = normalize(fileName);
+            String fullPath = key + ".yml";
             File file = new File(plugin.getDataFolder(), fullPath);
 
             File parentFolder = file.getParentFile();
@@ -35,10 +42,17 @@ public class ConfigManager {
                 }
             }
 
+            // ИСПРАВЛЕНО (2): если файла всё равно нет, пишем ошибку и не регистрируем пустой конфиг,
+            // чтобы getConfig вернул null вместо пустой секции и проблема была видна сразу
+            if (!file.exists()) {
+                plugin.getLogger().severe("Файл конфигурации отсутствует: " + fullPath);
+                continue;
+            }
+
             try {
                 YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
-                configs.put(fileName, config);
-                files.put(fileName, file);
+                configs.put(key, config);
+                files.put(key, file);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -46,16 +60,26 @@ public class ConfigManager {
     }
 
     public static FileConfiguration getConfig(String fileName) {
-        return configs.get(fileName);
+        // ИСПРАВЛЕНО (1): нормализация имени, плюс защита от null (например, если lang_file не задан)
+        if (fileName == null) {
+            return null;
+        }
+        return configs.get(normalize(fileName));
     }
 
     public static File getFile(String fileName) {
-        return files.get(fileName);
+        // ИСПРАВЛЕНО (1)
+        if (fileName == null) {
+            return null;
+        }
+        return files.get(normalize(fileName));
     }
 
     public static void save(String fileName) {
-        FileConfiguration config = configs.get(fileName);
-        File file = files.get(fileName);
+        // ИСПРАВЛЕНО (1)
+        String key = normalize(fileName);
+        FileConfiguration config = configs.get(key);
+        File file = files.get(key);
 
         if (config == null || file == null) {
             Plugin.getInstance().getLogger().warning("Конфиг не найден для сохранения: " + fileName);
@@ -77,7 +101,9 @@ public class ConfigManager {
     }
 
     public static void reload(String fileName) {
-        File file = files.get(fileName);
+        // ИСПРАВЛЕНО (1)
+        String key = normalize(fileName);
+        File file = files.get(key);
 
         if (file == null) {
             Plugin.getInstance().getLogger().warning("Конфиг не найден для перезагрузки: " + fileName);
@@ -85,7 +111,7 @@ public class ConfigManager {
         }
 
         YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
-        configs.put(fileName, config);
+        configs.put(key, config);
     }
 
     public static void reloadAll() {

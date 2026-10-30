@@ -6,9 +6,11 @@ import dev.doza.politic.model.region.flag.Flag;
 import dev.doza.politic.model.region.flag.manager.FlagManager;
 import dev.doza.politic.model.town.Town;
 import org.bukkit.Bukkit;
+import org.bukkit.Color;
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 
-import java.awt.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,21 +32,42 @@ public class Country {
     private Map<UUID, List<Flag>> playersFlag;
 
     public Country(String name, UUID resident, Town capital, int r, int g, int b) {
+        Player founder = Bukkit.getPlayer(resident);
+
         this.name = name;
         this.resident = resident;
-        this.towns = Map.of(capital.getName(), capital);
+        this.towns = new HashMap<>();
+        this.towns.put(capital.getName(), capital);
         this.balance = 0.0;
-        this.players = List.of(resident);
+        this.players = new ArrayList<>();
+        this.players.add(resident);
         this.capital = capital;
-        this.color = new Color(r,g,b);
+        this.color = Color.fromRGB(r, g, b);
         this.friendlyFire = false;
         this.MemberFlags = FlagManager.getCountryFlags("member");
         this.NonMemberFlags = FlagManager.getCountryFlags("non-member");
         this.pvp = true;
-        this.center = Bukkit.getPlayer(resident).getLocation();
+        this.center = founder.getLocation();
         this.playersFlag = new HashMap<>();
-        new Region(Bukkit.getPlayer(resident).getChunk(), this, capital);
+        new Region(founder.getChunk(), this, capital);
         CountryManager.countries.put(name, this);
+    }
+
+    public Country(String name, UUID resident, Map<String, Town> towns, List<UUID> players, Town capital,
+                   Color color, double balance, boolean friendlyFire, boolean pvp, Location center) {
+        this.name = name;
+        this.resident = resident;
+        this.towns = towns;
+        this.players = players;
+        this.capital = capital;
+        this.color = color;
+        this.balance = balance;
+        this.friendlyFire = friendlyFire;
+        this.pvp = pvp;
+        this.center = center;
+        this.MemberFlags = FlagManager.getCountryFlags("member");
+        this.NonMemberFlags = FlagManager.getCountryFlags("non-member");
+        this.playersFlag = new HashMap<>();
     }
 
     public UUID getResident() {
@@ -104,10 +127,11 @@ public class Country {
         this.color = color;
     }
 
-    public boolean getFriendlyFire(){
+    public boolean getFriendlyFire() {
         return friendlyFire;
     }
-    public void setFriendlyFire(boolean friendlyFire){
+
+    public void setFriendlyFire(boolean friendlyFire) {
         this.friendlyFire = friendlyFire;
     }
 
